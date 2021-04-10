@@ -1,0 +1,6 @@
+Notas para ejecutar jambo-tubos.cpp
+
+make
+
+./jambo-tubos BF < entrada1
+
