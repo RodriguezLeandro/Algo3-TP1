@@ -37,10 +37,12 @@ int BruteForce(vector<jambo_elemento> jambo_elementos,vector<jambo_elemento> jam
         // Si llego a una hoja sin tener elementos es que estaba vacio mi vector
         if (n == 0) return 0;
 
+        printf("Iniciando nuevo procesar");
         int suma_pesos = jambo_vec_parc[n-1].peso;
 
         for (int j = n-1; j >= 0 ; j--)
         {
+            printf("Suma Pesos : %d, \n", suma_pesos);
             if ((j < n-1) && (suma_pesos > jambo_vec_parc[j].res || suma_pesos + jambo_vec_parc[j].peso > R))
             {
                 cant_parcial = 0;
