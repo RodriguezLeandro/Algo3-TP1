@@ -15,6 +15,8 @@ struct jambo_elemento{
 
 int cant_parcial;
 int res_parcial;
+int maxCant = -1;
+
 
 /***
 Algoritmo de fuerza bruta.
@@ -73,15 +75,110 @@ int BruteForce(vector<jambo_elemento> jambo_elementos,vector<jambo_elemento> jam
     }
 }
 
+int Backtracking_pro(vector<jambo_elemento> jambo_elementos, int i, int R,int cant){
+    if (cant > maxCant){                       // actualizo el maximo
+            maxCant=cant;
+    }
+    if(R<0){                                    // poda por factibilidad
+        return  -9999;
+
+    }    
+    if(i==jambo_elementos.size()){              // caso base
+        return 0;
+    }
+    if(cant+(jambo_elementos.size()-i)<maxCant){        // poda por optimalidad
+        return -9999;
+    }
+    int agrego;
+    int no_agrego;
+    agrego=Backtracking_pro(jambo_elementos,i+1,min(R-jambo_elementos[i].peso,jambo_elementos[i].res),cant+1)+1;
+    no_agrego=Backtracking_pro(jambo_elementos,i+1,R,cant);
+    return max(agrego,no_agrego);     
+        
+}
+
+
+int Backtracking_f(vector<jambo_elemento> jambo_elementos, int i, int R,int cant){
+    if(R<0){                            // poda por factibilidad
+        return  -9999;
+
+    }    
+    if(i==jambo_elementos.size()){       // caso base
+        return 0;
+    }
+    int agrego;
+    int no_agrego;
+    agrego=Backtracking_pro(jambo_elementos,i+1,min(R-jambo_elementos[i].peso,jambo_elementos[i].res),cant+1)+1;
+    no_agrego=Backtracking_pro(jambo_elementos,i+1,R,cant);
+    return max(agrego,no_agrego);     
+        
+}
+
+
+int Backtracking_op(vector<jambo_elemento> jambo_elementos, int i, int R,int cant){
+    
+    
+    if (cant > maxCant){                                       //actualizo el maximo
+            maxCant=cant;
+    }
+        
+    if(i==jambo_elementos.size()){                          // caso base
+        return 0;
+    }
+    if(cant+(jambo_elementos.size()-i)<maxCant){            //poda por optimalidad
+        return -9999;
+    }
+    int agrego;
+    int no_agrego;
+    agrego=Backtracking_pro(jambo_elementos,i+1,min(R-jambo_elementos[i].peso,jambo_elementos[i].res),cant+1)+1;
+    no_agrego=Backtracking_pro(jambo_elementos,i+1,R,cant);
+    return max(agrego,no_agrego);     
+        
+}
+
+
+
+int pd(vector<jambo_elemento> jambo_elementos, int i, int R,int cant,int * M){
+    
+    M[0];
+    M[2];
+    M++;
+    M[3];
+
+    if (cant > maxCant){                                       //actualizo el maximo
+            maxCant=cant;
+    }
+        
+    if(i==jambo_elementos.size()){                          // caso base
+        return 0;
+    }
+    if(cant+(jambo_elementos.size()-i)<maxCant){            //poda por optimalidad
+        return -9999;
+    }
+    int agrego;
+    int no_agrego;
+    agrego=Backtracking_pro(jambo_elementos,i+1,min(R-jambo_elementos[i].peso,jambo_elementos[i].res),cant+1)+1;
+    no_agrego=Backtracking_pro(jambo_elementos,i+1,R,cant);
+    return max(agrego,no_agrego);     
+        
+}
+
+
+
+
+
+
 int main(int argc, char** argv){
 
     printf("Starting program of jambo-tubos\n");
 
     vector<jambo_elemento> jambo_elementos;
-    int n;
-    int R;
+    
+
     int peso;
     int res;
+    int R;
+    int n;
     
     // Leemos el parametro que indica el algoritmo a ejecutar.
     map<string, string> algoritmos_implementados = {
@@ -110,7 +207,7 @@ int main(int argc, char** argv){
     }
 
     // Ejecutamos el algoritmo y obtenemos su tiempo de ejecución.
-    int maxCant = -1;
+     // int maxCant = -1;
 
     auto start = chrono::steady_clock::now();
     if (algoritmo == "BF")
@@ -125,23 +222,75 @@ int main(int argc, char** argv){
 
         maxCant = BruteForce(jambo_elementos, jambo_vec_parc, 0, R);
     }
+    // 
+    //    codigo Backtracking con todas las podas
+    //
     else if (algoritmo == "BT-0")
     {
 
+        printf("Ejecutando algoritmo de Backtracking con todas las podas:\n");
+
+        
+        maxCant = Backtracking_pro(jambo_elementos, 0, R, 0);
+
     }
+    // 
+    //    codigo Backtracking con la poda por optimalidad
+    //
+    
+    else if (algoritmo == "BT-O")
+    {
+        printf("Ejecutando algoritmo de Backtracking con solo poda de optimalidad:\n");
+
+        
+        maxCant = Backtracking_op(jambo_elementos, 0, R, 0);
+
+    }
+
+    // 
+    //    codigo Backtracking con la poda por factibilidad
+    //
+
     else if (algoritmo == "BT-F")
     {
 
-    }
-    else if (algoritmo == "BT-O")
-    {
+        printf("Ejecutando algoritmo de Backtracking con solo poda de factibilidad:\n");
+
+        
+        maxCant = Backtracking_f(jambo_elementos, 0, R, 0);
+
 
     }
+
+    // 
+    //    codigo PROGRAMACION DINAMICA
+    //
+
+
     else if (algoritmo == "DP")
     {
-        // Precomputamos la solucion para los estados.
+    
 
+        // Precomputamos la solucion para los estados.
+     int  memoizacion[n][R] {}; //declro la estructura de memoizacion
+
+      std::fill(*memoizacion, *memoizacion + n*R, -1); //relleno con -1 la estructura
+
+      
+      int * m;
+      m=memoizacion;
+      
+      
         // Obtenemos la solucion optima.
+
+        printf("Ejecutando algoritmo de programacion dinamica:\n");
+
+        
+        maxCant = pd(jambo_elementos, 0, R, 0, m);
+
+
+
+
     }
     auto end = chrono::steady_clock::now();
     double total_time = chrono::duration<double, milli>(end - start).count();
