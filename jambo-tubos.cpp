@@ -15,7 +15,7 @@ struct jambo_elemento{
 
 int cant_parcial;
 int maxCant = -1;
-
+vector<vector<int>> memoizacion;
 /***
 Algoritmo de fuerza bruta.
 
@@ -104,7 +104,7 @@ int Backtracking_op(vector<jambo_elemento> jambo_elementos, int i, int R,int can
 
 
 
-int pd(vector<jambo_elemento> jambo_elementos, int i, int R, int cant,int M[][7000]){
+int pd(vector<jambo_elemento> jambo_elementos, int i, int R){
    /* cout << "///////////////////" << endl;
     cout << "el indice esta en: " << endl;
     cout << i << endl;
@@ -124,17 +124,18 @@ int pd(vector<jambo_elemento> jambo_elementos, int i, int R, int cant,int M[][70
         return 0;
     }
 
-    if (M[i][R]==-1){
+    if (memoizacion[i][R]==-1){
         
-        int agrego = pd(jambo_elementos,i+1,min(R-jambo_elementos[i].peso,jambo_elementos[i].res),cant+1,M)+1;
-        int no_agrego = pd(jambo_elementos,i+1,R,cant,M);
+        int agrego = pd(jambo_elementos,i+1,min(R-jambo_elementos[i].peso,jambo_elementos[i].res))+1;
+        int no_agrego = pd(jambo_elementos,i+1,R);
         
 
 
-        M[i][R]=max(no_agrego,agrego);
+        memoizacion[i][R]=max(no_agrego,agrego);
+        
     }
     
-    return M[i][R];     
+    return memoizacion[i][R];     
         
 
 }
@@ -232,14 +233,20 @@ int main(int argc, char** argv){
     //    codigo PROGRAMACION DINAMICA
     //
 
-    else if (algoritmo == "DP")
-    {
+    else if (algoritmo == "DP"){
     
     // Precomputamos la solucion para los estados.
         
-    int memoizacion[n][7000] {};  
+    
+    //vector<vector<int>> memoizacion;
 
-    std::fill(*memoizacion, *memoizacion + n*7000, -1); //relleno con -1 la estructura
+    
+    memoizacion = vector<vector<int>>(n+1, vector<int>(R+1, -1));
+    //memoizacion.assign(n,R,{});
+
+
+
+  //  std::fill(*memoizacion, *memoizacion + n*7000, -1); //relleno con -1 la estructura
 
       //int ** m; 
 
@@ -253,14 +260,8 @@ int main(int argc, char** argv){
         printf("Ejecutando algoritmo de programacion dinamica:\n");
 
         
-        for(int k=0; k<n;k++){
-            for(int h=0; h<7000;h++){
-                cout << memoizacion[k][h] << endl;
-            }
-            
-        }
-
-        maxCant = pd(jambo_elementos, 0, R, 0,memoizacion);
+      
+        maxCant = pd(jambo_elementos, 0, R);
     }
 
     auto end = chrono::steady_clock::now();
