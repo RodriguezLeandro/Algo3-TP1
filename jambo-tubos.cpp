@@ -14,10 +14,8 @@ struct jambo_elemento{
 };
 
 int cant_parcial;
-int res_parcial;
 int maxCant = -1;
-int R=20;
-int n;
+
 /***
 Algoritmo de fuerza bruta.
 
@@ -30,49 +28,15 @@ Parametros:
 Returns:
   - int: Maxima cantidad posible de elementos en la cinta
 ***/
-int BruteForce(vector<jambo_elemento> jambo_elementos,vector<jambo_elemento> jambo_vec_parc, int i, int R){
-    if (i == jambo_elementos.size())
-    {
-        //Proceso las hojas del arbol de fuerza bruta
-        int n = jambo_vec_parc.size();
-
-        // Si llego a una hoja sin tener elementos es que estaba vacio mi vector
-        if (n == 0) return 0;
-
-        printf("Iniciando nuevo procesar");
-        int suma_pesos = jambo_vec_parc[n-1].peso;
-
-        for (int j = n-1; j >= 0 ; j--)
-        {
-            printf("Suma Pesos : %d, \n", suma_pesos);
-            if ((j < n-1) && (suma_pesos > jambo_vec_parc[j].res || suma_pesos + jambo_vec_parc[j].peso > R))
-            {
-                cant_parcial = 0;
-                return 0;
-            }
-            else
-            {
-               suma_pesos += jambo_vec_parc[j].peso;
-               cant_parcial++;
-            }
-        }    
-
-        if (cant_parcial > res_parcial)
-        {
-            res_parcial = cant_parcial;
-            cant_parcial = 0;
-        }
-
-        return res_parcial;
+int BruteForce(vector<jambo_elemento> jambo_elementos, int i, int R){
+    if (i == jambo_elementos.size()){
+        return R >= 0 ? cant_parcial : 0;
     }
-    else
-    {
-        int res_p1 = BruteForce(jambo_elementos, jambo_vec_parc, i+1, R);
-
-        jambo_vec_parc.push_back(jambo_elementos[i]);
-        int res_p2 = BruteForce(jambo_elementos, jambo_vec_parc, i+1, R);
-        jambo_vec_parc.pop_back();
-
+    else {
+        int res_p1 = BruteForce(jambo_elementos, i+1, R);
+        cant_parcial++;
+        int res_p2 = BruteForce(jambo_elementos, i+1, min(jambo_elementos[i].res, R - jambo_elementos[i].peso));
+        cant_parcial--;
         return max(res_p1, res_p2);
     }
 }
@@ -175,11 +139,6 @@ int pd(vector<jambo_elemento> jambo_elementos, int i, int R, int cant,int M[][70
 
 }
 
-
-
-
-
-
 int main(int argc, char** argv){
 
     printf("Starting program of jambo-tubos\n");
@@ -189,8 +148,8 @@ int main(int argc, char** argv){
 
     int peso;
     int res;
-//    int R;
-  //  int n;
+    int R;
+    int n;
     
     // Leemos el parametro que indica el algoritmo a ejecutar.
     map<string, string> algoritmos_implementados = {
@@ -219,20 +178,15 @@ int main(int argc, char** argv){
     }
 
     // Ejecutamos el algoritmo y obtenemos su tiempo de ejecución.
-     // int maxCant = -1;
+    // int maxCant = -1;
 
     auto start = chrono::steady_clock::now();
     if (algoritmo == "BF")
     {
         printf("Ejecutando algoritmo de fuerza bruta:\n");
 
-        vector<jambo_elemento> jambo_vec_parc;
-        jambo_vec_parc.assign(0,{});
-
         cant_parcial = 0;
-        res_parcial = 0;
-
-        maxCant = BruteForce(jambo_elementos, jambo_vec_parc, 0, R);
+        maxCant = BruteForce(jambo_elementos, 0, R);
     }
     // 
     //    codigo Backtracking con todas las podas
@@ -278,11 +232,9 @@ int main(int argc, char** argv){
     //    codigo PROGRAMACION DINAMICA
     //
 
-
     else if (algoritmo == "DP")
     {
     
-
     // Precomputamos la solucion para los estados.
         
     int memoizacion[n][7000] {};  
@@ -309,11 +261,8 @@ int main(int argc, char** argv){
         }
 
         maxCant = pd(jambo_elementos, 0, R, 0,memoizacion);
-
-
-
-
     }
+
     auto end = chrono::steady_clock::now();
     double total_time = chrono::duration<double, milli>(end - start).count();
 
