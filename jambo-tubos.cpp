@@ -16,8 +16,8 @@ struct jambo_elemento{
 int cant_parcial;
 int res_parcial;
 int maxCant = -1;
-
-
+int R=20;
+int n;
 /***
 Algoritmo de fuerza bruta.
 
@@ -138,29 +138,39 @@ int Backtracking_op(vector<jambo_elemento> jambo_elementos, int i, int R,int can
 
 
 
-int pd(vector<jambo_elemento> jambo_elementos, int i, int R,int cant,int * M){
+int pd(vector<jambo_elemento> jambo_elementos, int i, int R, int cant,int M[][7000]){
+   /* cout << "///////////////////" << endl;
+    cout << "el indice esta en: " << endl;
+    cout << i << endl;
+    cout << " " << endl;
+    cout << "el R esta en: " << endl;
+    cout << R << endl;
+    cout << " " << endl;
+    cout << "el cant esta en: " << endl;
+    cout << cant << endl;
+    */
     
-    M[0];
-    M[2];
-    M++;
-    M[3];
-
-    if (cant > maxCant){                                       //actualizo el maximo
-            maxCant=cant;
-    }
-        
-    if(i==jambo_elementos.size()){                          // caso base
-        return 0;
-    }
-    if(cant+(jambo_elementos.size()-i)<maxCant){            //poda por optimalidad
+    if(R<0){
         return -9999;
     }
-    int agrego;
-    int no_agrego;
-    agrego=Backtracking_pro(jambo_elementos,i+1,min(R-jambo_elementos[i].peso,jambo_elementos[i].res),cant+1)+1;
-    no_agrego=Backtracking_pro(jambo_elementos,i+1,R,cant);
-    return max(agrego,no_agrego);     
+
+    if(i==jambo_elementos.size()){
+        return 0;
+    }
+
+    if (M[i][R]==-1){
         
+        int agrego = pd(jambo_elementos,i+1,min(R-jambo_elementos[i].peso,jambo_elementos[i].res),cant+1,M)+1;
+        int no_agrego = pd(jambo_elementos,i+1,R,cant,M);
+        
+
+
+        M[i][R]=max(no_agrego,agrego);
+    }
+    
+    return M[i][R];     
+        
+
 }
 
 
@@ -177,8 +187,8 @@ int main(int argc, char** argv){
 
     int peso;
     int res;
-    int R;
-    int n;
+//    int R;
+  //  int n;
     
     // Leemos el parametro que indica el algoritmo a ejecutar.
     map<string, string> algoritmos_implementados = {
@@ -271,22 +281,32 @@ int main(int argc, char** argv){
     {
     
 
-        // Precomputamos la solucion para los estados.
-     int  memoizacion[n][R] {}; //declro la estructura de memoizacion
+    // Precomputamos la solucion para los estados.
+        
+    int memoizacion[n][7000] {};  
 
-      std::fill(*memoizacion, *memoizacion + n*R, -1); //relleno con -1 la estructura
+    std::fill(*memoizacion, *memoizacion + n*7000, -1); //relleno con -1 la estructura
 
-      
+      //int ** m; 
+
+      /*
       int * m;
-      m=memoizacion;
-      
+      m=&memoizacion;
+      */
       
         // Obtenemos la solucion optima.
 
         printf("Ejecutando algoritmo de programacion dinamica:\n");
 
         
-        maxCant = pd(jambo_elementos, 0, R, 0, m);
+        for(int k=0; k<n;k++){
+            for(int h=0; h<7000;h++){
+                cout << memoizacion[k][h] << endl;
+            }
+            
+        }
+
+        maxCant = pd(jambo_elementos, 0, R, 0,memoizacion);
 
 
 
