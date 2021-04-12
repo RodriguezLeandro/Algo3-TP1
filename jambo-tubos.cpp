@@ -84,12 +84,18 @@ int Backtracking_f(vector<jambo_elemento> jambo_elementos, int i, int R,int cant
 int Backtracking_op(vector<jambo_elemento> jambo_elementos, int i, int R,int cant){
     
     
-    if (cant > maxCant){                                       //actualizo el maximo
-            maxCant=cant;
-    }
         
     if(i==jambo_elementos.size()){                          // caso base
-        return 0;
+        if(R<0){
+            return -9999;
+        }else{
+
+            if (cant > maxCant){                                       //actualizo el maximo
+                maxCant=cant;
+            }
+            
+            return 0;
+        }
     }
     if(cant+(jambo_elementos.size()-i)<maxCant){            //poda por optimalidad
         return -9999;
