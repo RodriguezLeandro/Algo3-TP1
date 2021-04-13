@@ -81,9 +81,29 @@ int Backtracking_f(vector<jambo_elemento> jambo_elementos, int i, int R,int cant
 }
 
 
+int Backtracking_opAux(vector<jambo_elemento> jambo_elementos, int i, int R){
+    if (cant_parcial+((int)jambo_elementos.size()-i)<maxCant){
+        return 0;
+    }
+    if (i == jambo_elementos.size()){
+        if (R < 0){
+            return 0;
+        }
+        if (cant_parcial > maxCant){
+            maxCant = cant_parcial;
+        }
+        return cant_parcial;
+    }
+    else {
+        int res_p1 = Backtracking_opAux(jambo_elementos, i+1, R);
+        cant_parcial++;
+        int res_p2 = Backtracking_opAux(jambo_elementos, i+1, min(jambo_elementos[i].res, R - jambo_elementos[i].peso));
+        cant_parcial--;
+        return max(res_p1, res_p2);
+    }
+}
+
 int Backtracking_op(vector<jambo_elemento> jambo_elementos, int i, int R,int cant){
-    
-    
         
     if(i==jambo_elementos.size()){                          // caso base
         if(R<0){
@@ -215,8 +235,8 @@ int main(int argc, char** argv){
     {
         printf("Ejecutando algoritmo de Backtracking con solo poda de optimalidad:\n");
 
-        
-        maxCant = Backtracking_op(jambo_elementos, 0, R, 0);
+        cant_parcial = 0;
+        maxCant = Backtracking_opAux(jambo_elementos, 0, R);
 
     }
 
