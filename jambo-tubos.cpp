@@ -59,8 +59,9 @@ int Backtracking_pro(vector<jambo_elemento> jambo_elementos, int i, int R,int ca
     }
     int agrego;
     int no_agrego;
-    agrego=Backtracking_pro(jambo_elementos,i+1,min(R-jambo_elementos[i].peso,jambo_elementos[i].res),cant+1)+1;
     no_agrego=Backtracking_pro(jambo_elementos,i+1,R,cant);
+    agrego=Backtracking_pro(jambo_elementos,i+1,min(R-jambo_elementos[i].peso,jambo_elementos[i].res),cant+1)+1;
+    
     return max(agrego,no_agrego);     
         
 }
