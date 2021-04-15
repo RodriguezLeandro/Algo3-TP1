@@ -42,15 +42,17 @@ int BruteForce(vector<jambo_elemento> jambo_elementos, int i, int R){
 }
 
 int Backtracking_pro(vector<jambo_elemento> jambo_elementos, int i, int R,int cant){
-    if (cant > maxCant){                       // actualizo el maximo
-            maxCant=cant;
-    }
+    
     if(R<0){                                    // poda por factibilidad
         return  -9999;
 
     }    
     if(i==jambo_elementos.size()){              // caso base
         return 0;
+    }
+    
+    if (cant > maxCant){                       // actualizo el maximo
+        maxCant=cant;
     }
     if(cant+(jambo_elementos.size()-i)<maxCant){        // poda por optimalidad
         return -9999;
