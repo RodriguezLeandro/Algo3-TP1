@@ -254,8 +254,9 @@ int main(int argc, char** argv){
     // Imprimimos el resultado por stdout.
     cout << "Resultado de la ejecucion: " << maxCant << endl;
 
+    cout << "Tiempo de ejecucion: " << endl;
     // Imprimimos el tiempo de ejecución por stderr.
-    clog << "Tiempo de ejecucion: " << total_time << endl;
+    clog << total_time << endl;
     
     return 0;
 }
