@@ -16,12 +16,12 @@ struct jambo_elemento{
 int cant_parcial;
 int maxCant = -1;
 vector<vector<int>> memoizacion;
+
 /***
 Algoritmo de fuerza bruta.
 
 Parametros:
   - vector<jambo_elemento> jambo_elementos: Vector de jambo_elementos fijo con los elementos desde 0 hasta n.
-  - vector<jambo_elemento> jambo_vec_parc: Vector de jambo_elementos con los elementos desde 0 hasta i.
   - int i: indice del primer elemento de la cinta a ser considerado. 
   - int R: maxima resistencia del jambo-tubo.
 
@@ -84,8 +84,7 @@ int Backtracking_f(vector<jambo_elemento> jambo_elementos, int i, int R,int cant
         
 }
 
-
-int Backtracking_opAux(vector<jambo_elemento> jambo_elementos, int i, int R){
+int Backtracking_op(vector<jambo_elemento> jambo_elementos, int i, int R){
     if (cant_parcial+((int)jambo_elementos.size()-i)<maxCant){
         return 0;
     }
@@ -99,75 +98,31 @@ int Backtracking_opAux(vector<jambo_elemento> jambo_elementos, int i, int R){
         return cant_parcial;
     }
     else {
-        int res_p1 = Backtracking_opAux(jambo_elementos, i+1, R);
+        int res_p1 = Backtracking_op(jambo_elementos, i+1, R);
         cant_parcial++;
-        int res_p2 = Backtracking_opAux(jambo_elementos, i+1, min(jambo_elementos[i].res, R - jambo_elementos[i].peso));
+        int res_p2 = Backtracking_op(jambo_elementos, i+1, min(jambo_elementos[i].res, R - jambo_elementos[i].peso));
         cant_parcial--;
         return max(res_p1, res_p2);
     }
 }
 
-int Backtracking_op(vector<jambo_elemento> jambo_elementos, int i, int R,int cant){
-        
-    if(i==jambo_elementos.size()){                          // caso base
-        if(R<0){
-            return -9999;
-        }else{
-
-            if (cant > maxCant){                                       //actualizo el maximo
-                maxCant=cant;
-            }
-            
-            return 0;
-        }
-    }
-    if(cant+(jambo_elementos.size()-i)<maxCant){            //poda por optimalidad
-        return -9999;
-    }
-    int agrego;
-    int no_agrego;
-    agrego=Backtracking_op(jambo_elementos,i+1,min(R-jambo_elementos[i].peso,jambo_elementos[i].res),cant+1)+1;
-    no_agrego=Backtracking_op(jambo_elementos,i+1,R,cant);
-    return max(agrego,no_agrego);     
-        
-}
-
-
-
 int pd(vector<jambo_elemento> jambo_elementos, int i, int R){
-   /* cout << "///////////////////" << endl;
-    cout << "el indice esta en: " << endl;
-    cout << i << endl;
-    cout << " " << endl;
-    cout << "el R esta en: " << endl;
-    cout << R << endl;
-    cout << " " << endl;
-    cout << "el cant esta en: " << endl;
-    cout << cant << endl;
-    */
-    
     if(R<0){
         return -9999;
     }
-
     if(i==jambo_elementos.size()){
         return 0;
     }
-
     if (memoizacion[i][R]==-1){
         
         int agrego = pd(jambo_elementos,i+1,min(R-jambo_elementos[i].peso,jambo_elementos[i].res))+1;
         int no_agrego = pd(jambo_elementos,i+1,R);
-        
-
 
         memoizacion[i][R]=max(no_agrego,agrego);
         
     }
     
     return memoizacion[i][R];     
-        
-
 }
 
 int main(int argc, char** argv){
@@ -240,7 +195,7 @@ int main(int argc, char** argv){
         printf("Ejecutando algoritmo de Backtracking con solo poda de optimalidad:\n");
 
         cant_parcial = 0;
-        maxCant = Backtracking_opAux(jambo_elementos, 0, R);
+        maxCant = Backtracking_op(jambo_elementos, 0, R);
 
     }
 
