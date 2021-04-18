@@ -28,7 +28,7 @@ Parametros:
 Returns:
   - int: Maxima cantidad posible de elementos en la cinta
 ***/
-int BruteForce(vector<jambo_elemento> jambo_elementos, int i, int R){
+int BruteForce(vector<jambo_elemento> &jambo_elementos, int i, int R){
     if (i == jambo_elementos.size()){
         return R >= 0 ? cant_parcial : 0;
     }
@@ -41,7 +41,7 @@ int BruteForce(vector<jambo_elemento> jambo_elementos, int i, int R){
     }
 }
 
-int Backtracking_pro(vector<jambo_elemento> jambo_elementos, int i, int R,int cant){
+int Backtracking_pro(vector<jambo_elemento> &jambo_elementos, int i, int R,int cant){
     if(R<0){                                    // poda por factibilidad
         return  -9999;
 
@@ -67,7 +67,7 @@ int Backtracking_pro(vector<jambo_elemento> jambo_elementos, int i, int R,int ca
 }
 
 
-int Backtracking_f(vector<jambo_elemento> jambo_elementos, int i, int R,int cant){
+int Backtracking_f(vector<jambo_elemento> &jambo_elementos, int i, int R,int cant){
     if(R<0){                            // poda por factibilidad
         return  -9999;
 
@@ -83,7 +83,7 @@ int Backtracking_f(vector<jambo_elemento> jambo_elementos, int i, int R,int cant
         
 }
 
-int Backtracking_op(vector<jambo_elemento> jambo_elementos, int i, int R){
+int Backtracking_op(vector<jambo_elemento> &jambo_elementos, int i, int R){
     if (cant_parcial+((int)jambo_elementos.size()-i)<maxCant){
         return 0;
     }
@@ -105,7 +105,7 @@ int Backtracking_op(vector<jambo_elemento> jambo_elementos, int i, int R){
     }
 }
 
-int pd(vector<jambo_elemento> jambo_elementos, int i, int R){
+int pd(vector<jambo_elemento> &jambo_elementos, int i, int R){
     if(R<0){
         return -9999;
     }
