@@ -17,17 +17,6 @@ int cant_parcial;
 int maxCant = -1;
 vector<vector<int>> memoizacion;
 
-/***
-Algoritmo de fuerza bruta.
-
-Parametros:
-  - vector<jambo_elemento> jambo_elementos: Vector de jambo_elementos fijo con los elementos desde 0 hasta n.
-  - int i: indice del primer elemento de la cinta a ser considerado. 
-  - int R: maxima resistencia del jambo-tubo.
-
-Returns:
-  - int: Maxima cantidad posible de elementos en la cinta
-***/
 int BruteForce(vector<jambo_elemento> &jambo_elementos, int i, int R){
     if (i == jambo_elementos.size()){
         return R >= 0 ? cant_parcial : 0;
@@ -44,12 +33,10 @@ int BruteForce(vector<jambo_elemento> &jambo_elementos, int i, int R){
 int Backtracking_pro(vector<jambo_elemento> &jambo_elementos, int i, int R,int cant){
     if(R<0){                                    // poda por factibilidad
         return  -9999;
-
     }    
     if(i==jambo_elementos.size()){              // caso base
         return 0;
     }
-    
     if (cant > maxCant){                       // actualizo el maximo
         maxCant=cant;
     }
@@ -63,24 +50,23 @@ int Backtracking_pro(vector<jambo_elemento> &jambo_elementos, int i, int R,int c
     agrego=1+Backtracking_pro(jambo_elementos,i+1,min(R-jambo_elementos[i].peso,jambo_elementos[i].res),cant+1);
     
     return max(agrego,no_agrego);     
-        
 }
 
 
 int Backtracking_f(vector<jambo_elemento> &jambo_elementos, int i, int R,int cant){
     if(R<0){                            // poda por factibilidad
         return  -9999;
-
     }    
     if(i==jambo_elementos.size()){       // caso base
         return 0;
     }
     int agrego;
     int no_agrego;
-    agrego=Backtracking_f(jambo_elementos,i+1,min(R-jambo_elementos[i].peso,jambo_elementos[i].res),cant+1)+1;
+
     no_agrego=Backtracking_f(jambo_elementos,i+1,R,cant);
-    return max(agrego,no_agrego);     
-        
+    agrego=Backtracking_f(jambo_elementos,i+1,min(R-jambo_elementos[i].peso,jambo_elementos[i].res),cant+1)+1;
+    
+    return max(agrego,no_agrego);         
 }
 
 int Backtracking_op(vector<jambo_elemento> &jambo_elementos, int i, int R){
@@ -113,14 +99,11 @@ int pd(vector<jambo_elemento> &jambo_elementos, int i, int R){
         return 0;
     }
     if (memoizacion[i][R]==-1){
-        
         int agrego = pd(jambo_elementos,i+1,min(R-jambo_elementos[i].peso,jambo_elementos[i].res))+1;
         int no_agrego = pd(jambo_elementos,i+1,R);
 
         memoizacion[i][R]=max(no_agrego,agrego);
-        
     }
-    
     return memoizacion[i][R];     
 }
 
@@ -130,7 +113,6 @@ int main(int argc, char** argv){
 
     vector<jambo_elemento> jambo_elementos;
     
-
     int peso;
     int res;
     int R;
@@ -173,78 +155,27 @@ int main(int argc, char** argv){
         cant_parcial = 0;
         maxCant = BruteForce(jambo_elementos, 0, R);
     }
-    // 
-    //    codigo Backtracking con todas las podas
-    //
     else if (algoritmo == "BT-0")
     {
-
-        printf("Ejecutando algoritmo de Backtracking con todas las podas:\n");
-
-        
+        printf("Ejecutando algoritmo de Backtracking con todas las podas:\n");   
         maxCant = Backtracking_pro(jambo_elementos, 0, R, 0);
-
     }
-    // 
-    //    codigo Backtracking con la poda por optimalidad
-    //
-    
     else if (algoritmo == "BT-O")
     {
         printf("Ejecutando algoritmo de Backtracking con solo poda de optimalidad:\n");
-
         cant_parcial = 0;
         maxCant = Backtracking_op(jambo_elementos, 0, R);
-
     }
-
-    // 
-    //    codigo Backtracking con la poda por factibilidad
-    //
-
     else if (algoritmo == "BT-F")
     {
-
-        printf("Ejecutando algoritmo de Backtracking con solo poda de factibilidad:\n");
-
-        
+        printf("Ejecutando algoritmo de Backtracking con solo poda de factibilidad:\n");   
         maxCant = Backtracking_f(jambo_elementos, 0, R, 0);
-
-
     }
-
-    // 
-    //    codigo PROGRAMACION DINAMICA
-    //
-
     else if (algoritmo == "DP"){
-    
     // Precomputamos la solucion para los estados.
-        
-    
-    //vector<vector<int>> memoizacion;
-
-    
-    memoizacion = vector<vector<int>>(n+1, vector<int>(R+1, -1));
-    //memoizacion.assign(n,R,{});
-
-
-
-  //  std::fill(*memoizacion, *memoizacion + n*7000, -1); //relleno con -1 la estructura
-
-      //int ** m; 
-
-      /*
-      int * m;
-      m=&memoizacion;
-      */
-      
-        // Obtenemos la solucion optima.
+        memoizacion = vector<vector<int>>(n+1, vector<int>(R+1, -1));
 
         printf("Ejecutando algoritmo de programacion dinamica:\n");
-
-        
-      
         maxCant = pd(jambo_elementos, 0, R);
     }
 
