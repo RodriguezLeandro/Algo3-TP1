@@ -1,8 +1,10 @@
 
-Notas para ejecutar jambo-tubos.cpp
+Notas para ejecutar jambo-tubos.cpp.
 
+Realizar make en el directorio de jambo-tubos.cpp para compilar el archivo Makefile.
 
-make
+Ejecutar
+./jambo-tubos (metodo*) < (entrada*)
 
-./jambo-tubos BF < entrada1
+Donde metodo es alguno de los métodos algoritmicos estudiados en la materia: BF, BT-0, BT-F, BT-O, DP y entrada* es la entrada sobre la que queremos ejecutar el algoritmo.
 
